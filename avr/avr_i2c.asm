@@ -116,31 +116,4 @@ i2c_finish_byte:
 	sei									;re-enable global interrupts
 	reti								;interrupt return
 
-;i2c_int1:
-;    set count 48
-;    cmp sda, id
-;    jnz notus
-;    set us 1
-;    jmp ret
-;notus:
-;    set us 0
-;ret:
-;    set i2c_irq, i2c_int2
-;    reti ; return from interrupt
-;
-;
-;i2c_int2:
-;    cmp us, 0
-;    jz nowrite
-;    write [temp - count], sda
-;nowrite:
-;    dec count
-;    jnz ret
-;    # force SCL low
-;    copy outbuf, temp
-;    # stop forcing SCL low
-;    set i2c_irq i2c_int1
-;ret:
-;    reti ; return from interrupt
-
 ; vim:noet ts=4 sw=4 sts=4 ai:
