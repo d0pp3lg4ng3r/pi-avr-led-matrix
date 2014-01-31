@@ -39,17 +39,17 @@
 .CSEG										;begin code segment
 
 setup:
-    set		TIM0_OVF	update				;set update to handle timer 0 overflows
-    set		USI_OVF		i2c_byte_ready		;set i2c_byte_ready to handle overflow of the bits recieved counter of the USI
-    set		USI_STR		i2c_start			;set i2c_start to handle USI start condition 
-    set		DDRA		0b10101111			;set the pin directions for port A 
+	set		TIM0_OVF	update				;set update to handle timer 0 overflows
+	set		USI_OVF		i2c_byte_ready		;set i2c_byte_ready to handle overflow of the bits recieved counter of the USI
+	set		USI_STR		i2c_start			;set i2c_start to handle USI start condition 
+	set		DDRA		0b10101111			;set the pin directions for port A 
 	set		USICR		0b10101000			;USI control enable start interrupt, 2 wire mode, clocked on external pos edge
 	;TODO: set clock prescalers for T0 and T1
 	;TODO: start timers
 	sei										;set the global interrupt enable 
 main:										;main wait loop 
 	nop										;do nothing
-    ijmp	main							;go back to main loop
+	ijmp	main							;go back to main loop
 
 update:										;callback for overflow of TCNT0
     set		BYTE_POS	CHANNEL_COUNT		;reset the current read offset to channel count (1 past end of array)
@@ -57,20 +57,20 @@ update:										;callback for overflow of TCNT0
 	set		YL			low(bytebuff)		;load the low byte of the address into the pointer
 	adiw	YH			BYTE_POS			;offset the read location start
 loop:										;begin pwm byte processing loop 
-    ld		BYTE_BUF	-Y					;decrement the pointer and load the current byte of color data from sram
-    cbr		PORTA		S_OUT_MASK			;Clear the DS, SHCP, and STCP bits from the output
-    cmp		TCNT1H		BYTE_BUF			;compare the current byte value and the Timer1 High byte value
-    brsh	nosethigh						;skip setting the data pin if Timer1H >= current byte
-    sbr		PORTA		DS_PIN				;else set DS high
+	ld		BYTE_BUF	-Y					;decrement the pointer and load the current byte of color data from sram
+	cbr		PORTA		S_OUT_MASK			;Clear the DS, SHCP, and STCP bits from the output
+	cmp		TCNT1H		BYTE_BUF			;compare the current byte value and the Timer1 High byte value
+	brsh	nosethigh						;skip setting the data pin if Timer1H >= current byte
+	sbr		PORTA		DS_PIN				;else set DS high
 nosethigh:
-    sbr		PORTA		SHCP_PIN			;set SHCP(clock) high
-    dec		BYTE_POS						;set next byte pointer
+	sbr		PORTA		SHCP_PIN			;set SHCP(clock) high
+	dec		BYTE_POS						;set next byte pointer
 	cmp		BYTE_POS	0					;compare the postions of the start of the data and the current byte position
-    brne	loop							;if there are still bytes in the array jump to handle next byte
+	brne	loop							;if there are still bytes in the array jump to handle next byte
 finalize:
-    sbr		PORTA		STCP_PIN			;set STCP(clock) high
-    cbr		PORTA		S_OUT_MASK			;Clear the DS, SHCP, and STCP bits from the output
-    reti									;return from interrupt     
+	sbr		PORTA		STCP_PIN			;set STCP(clock) high
+	cbr		PORTA		S_OUT_MASK			;Clear the DS, SHCP, and STCP bits from the output
+	reti									;return from interrupt     
 
 i2c_start:									;callback for the i2c start interrupt
 	set		I2C_STATUS	STATUS_START		;set the status register to started
