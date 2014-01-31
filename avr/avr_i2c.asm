@@ -51,8 +51,11 @@
 setup:                                      ;system entry point
     ser     DDRA,       0b10101111          ;set the pin directions for port A 
     ser     USICR,      0b10101000          ;USI control enable start interrupt, 2 wire mode, clocked on external pos edge
-                                            ;TODO: set clock prescalers for T0 and T1
-                                            ;TODO: start timers
+	ser     OCR0A,      0xFF                ;Set Timer 0 to count to max value
+	ser     TCCR0A,     2                   ;Set waveform mode to CTC mode
+	ser     TCCR0B,     4                   ;Set timer 0 prescaler to 256
+	ser     TIMSCK0,    1                   ;Enable Timer 0 overflow interrupt
+	ser     TCCR1B,     0b00010100          ;Set clock prescale to 256 and WGM to CTC mode
     sei                                     ;set the global interrupt enable 
 main:                                       ;main wait loop 
     nop                                     ;do nothing TODO: replace this with sleep mode
