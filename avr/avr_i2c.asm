@@ -88,7 +88,7 @@ i2c_start:                                  ;callback for the i2c start interrup
     reti                                    ;interrupt return
 
 i2c_byte_ready:                             ;callback for the USI byte ready interrupt (bit count overflow)
-    cei                                     ;disable global interrupts
+    cli                                     ;disable global interrupts
     cpi     I2C_STATUS, STATUS_START        ;check if this is a new I2C packet
     brne    skip_check_addr                 ;was not an address packet skip checking the addr
     mov     TEMP,       USIDR               ;copy the data from the I2C register to the temp storage
@@ -100,7 +100,7 @@ i2c_byte_ready:                             ;callback for the USI byte ready int
     rjmp    i2c_finish_byte                 ;done handling the byte GOTO exit byte callback
 i2c_was_us:
     mov     I2C_STATUS, STATUS_US           ;set the status flag to was us  
-    crb     USISR,      USI_COUNT_MASK      ;clear the USI counter
+    cbr     USISR,      USI_COUNT_MASK      ;clear the USI counter
     set     READ_POS,   CHANNEL_COUNT       ;reset the current read offset to channel count (1 past end of array)
     set     ZH,         high(bytebuff)      ;load the high byte of the address into the pointer
     set     ZL,         low(bytebuff)       ;load the low byte of the address into the pointer
