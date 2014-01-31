@@ -1,0 +1,5 @@
+*.tmp
+*.hex
+*.map
+*.obj
+*.lss
