@@ -95,7 +95,7 @@ finalize:
     sbr     PORTA_VAL,  STCP_PIN            ;set STCP(clock) high
 	out     PORTA,      PORTA_VAL           ;
     cbr     PORTA_VAL,  S_OUT_MASK          ;Clear the DS, SHCP, and STCP bits from the output
-	out     PORTA,      PORTA_VAL          ;
+	out     PORTA,      PORTA_VAL           ;
     reti                                    ;return from interrupt     
 
 i2c_start:                                  ;callback for the i2c start interrupt
