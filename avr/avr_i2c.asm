@@ -31,17 +31,24 @@
 .DEF    I2C_STATUS     =R3                  ;store the current i2c status in R3
 .DEF    TEMP           =R4                  ;temp register
 
-;--------------------SET UP DATA-----------------------------;
+;---------------------SET UP DATA--------------------------;
 .DSEG                                       ;start data segment
     bytebuff: .BYTE CHANNEL_COUNT           ;reserve CHANNEL_COUNT bytes for storing PWM values 
+
+;--------------------SET INTERRUPTS------------------------;
+.ORG    $0000
+        rjmp setup                          ;specify entry point
+.ORG    TIM0_OVF
+        rjmp update                         ;set update to handle timer 0 overflows
+.ORG    USI_OVF
+        rjmp i2c_byte_ready                 ;set i2c_byte_ready to handle overflow of the bits recieved counter of the USI
+.ORG    USI_STR
+        rjmp i2c_start                      ;set i2c_start to handle USI start condition
 
 ;-----------------START CODE SEGMENT-----------------------;
 .CSEG                                       ;begin code segment
 
-setup:
-    set     TIM0_OVF,   update              ;set update to handle timer 0 overflows TODO: figure out if 'ser' is the correct command
-    set     USI_OVF,    i2c_byte_ready      ;set i2c_byte_ready to handle overflow of the bits recieved counter of the USI TODO: figure out if 'ser' is the correct command
-    set     USI_STR,    i2c_start           ;set i2c_start to handle USI start condition  TODO: figure out if 'ser' is the correct command
+setup:                                      ;system entry point
     ser     DDRA,       0b10101111          ;set the pin directions for port A 
     ser     USICR,      0b10101000          ;USI control enable start interrupt, 2 wire mode, clocked on external pos edge
                                             ;TODO: set clock prescalers for T0 and T1
