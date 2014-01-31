@@ -37,13 +37,13 @@
 
 ;--------------------SET INTERRUPTS------------------------;
 .ORG    $0000
-        rjmp setup                          ;specify entry point
+            rjmp        setup               ;specify entry point
 .ORG    TIM0_OVF
-        rjmp update                         ;set update to handle timer 0 overflows
+            rjmp        update              ;set update to handle timer 0 overflows
 .ORG    USI_OVF
-        rjmp i2c_byte_ready                 ;set i2c_byte_ready to handle overflow of the bits recieved counter of the USI
+            rjmp        i2c_byte_ready      ;set i2c_byte_ready to handle overflow of the bits recieved counter of the USI
 .ORG    USI_STR
-        rjmp i2c_start                      ;set i2c_start to handle USI start condition
+            rjmp        i2c_start           ;set i2c_start to handle USI start condition
 
 ;-----------------START CODE SEGMENT-----------------------;
 .CSEG                                       ;begin code segment
