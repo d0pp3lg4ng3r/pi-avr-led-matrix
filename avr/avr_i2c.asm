@@ -6,32 +6,32 @@
 ;   Authors:    Samuel Fink and Ryan Fredette
 ;----------------------------------------------------------;
 
-.DEVICE  ATtiny84                            ;Run on the ATTINY 84
+.DEVICE  ATtiny84                           ;Run on the ATTINY 84
 .INCLUDE "tn84def.inc"
 
 ;-------------------DEFINE CONSTANTS-----------------------;
-.EQU    SLAVE_ADDR      =0x43                 ;define the slave device address. MAXIMUM 7 BITS
-.EQU    CHANNEL_COUNT   =48                   ;Define the number of PWM channels to use.  MAXIMUM 1 byte
-.EQU    SCL_PIN         =0b00010000           ;define the bitmask for the SCL pin for recieving I2C clock signal
-.EQU    SDA_PIN         =0b01000000           ;define the bitmask for the SDA pin for doing I2C data
-.EQU    DS_PIN          =0b00000001           ;define the bitmask for the DS pin for sending data to the shift registers
-.EQU    SHCP_PIN        =0b00000010           ;define the bitmask for the SCHP pin for clocking data into the shift registers
-.EQU    STCP_PIN        =0b00000100           ;define the bitmask for STCP pin for moving shift register values to the output register
-.EQU    S_OUT_MASK      =0b00000111           ;define bitmask for the pins that are used by the shift register
-.EQU    STATUS_START    =1                    ;set the enum for the start state of the i2c processing code
-.EQU    STATUS_US       =2                    ;set the enum for the reading state of the i2c processing code
-.EQU    STATUS_NOT_US   =3                    ;set the enum for the data ignore state of the i2c processing code
-.EQU    STATUS_DONE     =4                    ;set the enum for we cant store any more data
-.EQU    USI_COUNT_MASK  =0b00001111           ;define bitmaks for the USI 4 bit counter
-.EQU    USIOFI_MASK     =0b01000000           ;define the bitmask for the USI overflow interupt enable flag   
+.EQU    SLAVE_ADDR      =0x43               ;define the slave device address. MAXIMUM 7 BITS
+.EQU    CHANNEL_COUNT   =48                 ;Define the number of PWM channels to use.  MAXIMUM 1 byte
+.EQU    SCL_PIN         =0b00010000         ;define the bitmask for the SCL pin for recieving I2C clock signal
+.EQU    SDA_PIN         =0b01000000         ;define the bitmask for the SDA pin for doing I2C data
+.EQU    DS_PIN          =0b00000001         ;define the bitmask for the DS pin for sending data to the shift registers
+.EQU    SHCP_PIN        =0b00000010         ;define the bitmask for the SCHP pin for clocking data into the shift registers
+.EQU    STCP_PIN        =0b00000100         ;define the bitmask for STCP pin for moving shift register values to the output register
+.EQU    S_OUT_MASK      =0b00000111         ;define bitmask for the pins that are used by the shift register
+.EQU    STATUS_START    =1                  ;set the enum for the start state of the i2c processing code
+.EQU    STATUS_US       =2                  ;set the enum for the reading state of the i2c processing code
+.EQU    STATUS_NOT_US   =3                  ;set the enum for the data ignore state of the i2c processing code
+.EQU    STATUS_DONE     =4                  ;set the enum for we cant store any more data
+.EQU    USI_COUNT_MASK  =0b00001111         ;define bitmaks for the USI 4 bit counter
+.EQU    USIOFI_MASK     =0b01000000         ;define the bitmask for the USI overflow interupt enable flag   
 
 ;-----------------SET REGISTER NAMES-----------------------;
-.DEF    BYTE_BUF        =R17                  ;store the current rendering byte in R0
-.DEF    BYTE_POS        =R18                  ;store the current offset of the rendering in R1
-.DEF    READ_POS        =R19                  ;store the current byte read offset in position in R2
-.DEF    I2C_STAT        =R20                  ;store the current i2c status in R3
-.DEF    TEMP            =R21                  ;temp register
-.DEF    PORTA_VAL       =R22                  ;what the PORTA value uhould be
+.DEF    BYTE_BUF        =R17                ;store the current rendering byte in R0
+.DEF    BYTE_POS        =R18                ;store the current offset of the rendering in R1
+.DEF    READ_POS        =R19                ;store the current byte read offset in position in R2
+.DEF    I2C_STAT        =R20                ;store the current i2c status in R3
+.DEF    TEMP            =R21                ;temp register
+.DEF    PORTA_VAL       =R22                ;what the PORTA value uhould be
 
 .CSEG
 ;--------------------SET INTERRUPTS------------------------;
